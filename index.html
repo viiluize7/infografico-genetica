@@ -1,0 +1,862 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Dashboard — Proposta 4 | Agropecuária comparada</title>
+  <style>
+    :root {
+      --bg: #f3f7f2;
+      --card: rgba(255,255,255,0.92);
+      --text: #132015;
+      --muted: #667085;
+      --line: #dfe8dc;
+      --green: #1f7a3d;
+      --green-2: #2fb344;
+      --lime: #d9f99d;
+      --blue: #2563eb;
+      --orange: #f97316;
+      --red: #dc2626;
+      --purple: #7c3aed;
+      --yellow: #facc15;
+      --shadow: 0 22px 70px rgba(20, 83, 45, 0.13);
+      --radius: 24px;
+    }
+
+    * { box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+    body {
+      margin: 0;
+      color: var(--text);
+      font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      background:
+        radial-gradient(circle at top left, rgba(187, 247, 208, 0.75), transparent 32rem),
+        radial-gradient(circle at 82% 8%, rgba(254, 240, 138, 0.75), transparent 28rem),
+        linear-gradient(135deg, #f8fff6 0%, #edf7ee 52%, #f8fafc 100%);
+      min-height: 100vh;
+    }
+
+    header {
+      position: relative;
+      overflow: hidden;
+      padding: clamp(22px, 4vw, 48px);
+    }
+
+    .hero {
+      position: relative;
+      border-radius: 34px;
+      min-height: 330px;
+      padding: clamp(26px, 4.5vw, 56px);
+      background:
+        linear-gradient(120deg, rgba(20, 83, 45, 0.96), rgba(34, 197, 94, 0.86)),
+        url("data:image/svg+xml,%3Csvg width='900' height='380' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' stroke='%23ffffff' stroke-opacity='.13'%3E%3Cpath d='M0 305C129 195 221 365 365 246S633 108 900 206' stroke-width='22'/%3E%3Cpath d='M0 170C150 75 273 214 413 116S700 54 900 95' stroke-width='14'/%3E%3Ccircle cx='760' cy='258' r='110'/%3E%3Ccircle cx='760' cy='258' r='70'/%3E%3C/g%3E%3C/svg%3E");
+      background-size: cover;
+      color: white;
+      box-shadow: 0 28px 90px rgba(20, 83, 45, 0.28);
+    }
+
+    .hero-grid {
+      display: grid;
+      grid-template-columns: 1.35fr 0.65fr;
+      gap: 24px;
+      align-items: end;
+    }
+
+    .eyebrow {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      border: 1px solid rgba(255,255,255,.25);
+      background: rgba(255,255,255,.12);
+      color: #f7fee7;
+      border-radius: 999px;
+      padding: 8px 12px;
+      font-size: 13px;
+      font-weight: 800;
+      backdrop-filter: blur(10px);
+    }
+
+    h1 {
+      max-width: 980px;
+      margin: 18px 0 12px;
+      font-size: clamp(34px, 5vw, 68px);
+      line-height: 0.96;
+      letter-spacing: -0.06em;
+    }
+
+    .hero p {
+      max-width: 900px;
+      color: rgba(255,255,255,.84);
+      font-size: 17px;
+      line-height: 1.65;
+      margin: 0;
+    }
+
+    .group-card {
+      background: rgba(255,255,255,.13);
+      border: 1px solid rgba(255,255,255,.23);
+      border-radius: 24px;
+      padding: 18px;
+      backdrop-filter: blur(12px);
+    }
+    .group-card label { display: block; color: #dcfce7; font-size: 12px; font-weight: 800; margin-bottom: 8px; }
+    .group-card input {
+      width: 100%;
+      border: 1px solid rgba(255,255,255,.3);
+      background: rgba(255,255,255,.92);
+      color: #14331f;
+      border-radius: 16px;
+      padding: 12px 14px;
+      font: inherit;
+      font-weight: 800;
+      outline: none;
+    }
+    .group-card .mini { color: rgba(255,255,255,.75); font-size: 12px; margin-top: 10px; line-height: 1.45; }
+
+    .hero-kpis {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: 12px;
+      margin-top: 26px;
+    }
+    .hero-kpi {
+      background: rgba(255,255,255,.14);
+      border: 1px solid rgba(255,255,255,.22);
+      border-radius: 20px;
+      padding: 16px;
+      backdrop-filter: blur(12px);
+    }
+    .hero-kpi strong { display: block; font-size: 26px; line-height: 1; letter-spacing: -0.04em; }
+    .hero-kpi span { color: rgba(255,255,255,.77); font-size: 12px; font-weight: 750; }
+
+    main { padding: 0 clamp(18px, 4vw, 48px) 48px; }
+
+    .toolbar {
+      position: sticky;
+      top: 0;
+      z-index: 15;
+      margin: -12px 0 18px;
+      border: 1px solid rgba(223,232,220,.9);
+      background: rgba(255,255,255,.86);
+      backdrop-filter: blur(16px);
+      border-radius: 24px;
+      box-shadow: var(--shadow);
+      padding: 16px;
+      display: grid;
+      grid-template-columns: 1.2fr 1fr 1fr 1fr;
+      gap: 14px;
+      align-items: end;
+    }
+
+    .control { display: grid; gap: 7px; }
+    .control label { color: #536353; font-weight: 900; font-size: 12px; text-transform: uppercase; letter-spacing: .04em; }
+    select, input[type="number"], input[type="text"], textarea {
+      width: 100%;
+      border: 1px solid var(--line);
+      background: white;
+      border-radius: 16px;
+      padding: 11px 12px;
+      color: var(--text);
+      outline: none;
+      font: inherit;
+    }
+
+    .country-panel {
+      grid-column: 1 / -1;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      align-items: center;
+    }
+    .country-chip {
+      display: inline-flex;
+      gap: 8px;
+      align-items: center;
+      border: 1px solid var(--line);
+      background: #fff;
+      border-radius: 999px;
+      padding: 9px 12px;
+      color: #314331;
+      font-weight: 850;
+      cursor: pointer;
+      user-select: none;
+    }
+    .country-chip input { accent-color: var(--green); }
+
+    button {
+      border: 0;
+      border-radius: 16px;
+      padding: 11px 14px;
+      font-weight: 900;
+      cursor: pointer;
+      color: white;
+      background: var(--green);
+      transition: transform .16s ease, opacity .16s ease, box-shadow .16s ease;
+    }
+    button:hover { transform: translateY(-1px); opacity: .96; box-shadow: 0 12px 24px rgba(31,122,61,.16); }
+    button.secondary { background: #e7efe4; color: #16341f; }
+    button.blue { background: var(--blue); }
+    button.orange { background: var(--orange); }
+    button.red { background: var(--red); }
+    button.purple { background: var(--purple); }
+
+    .grid {
+      display: grid;
+      grid-template-columns: 1.25fr .75fr;
+      gap: 18px;
+    }
+    .card {
+      background: var(--card);
+      border: 1px solid rgba(223,232,220,.9);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      padding: 22px;
+      overflow: hidden;
+    }
+    .full { grid-column: 1 / -1; }
+    h2 { margin: 0 0 8px; font-size: 23px; letter-spacing: -0.03em; }
+    h3 { margin: 0 0 8px; font-size: 16px; }
+    p { color: var(--muted); line-height: 1.6; margin: 0; }
+
+    .status {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      margin: 10px 0 0;
+      border-radius: 999px;
+      background: #f0fdf4;
+      color: #166534;
+      border: 1px solid #bbf7d0;
+      padding: 7px 10px;
+      font-size: 12px;
+      font-weight: 900;
+    }
+    .status.error { background: #fef2f2; color: #991b1b; border-color: #fecaca; }
+    .status.loading { background: #eff6ff; color: #1d4ed8; border-color: #bfdbfe; }
+
+    .chart-wrap {
+      margin-top: 14px;
+      min-height: 390px;
+      border: 1px solid var(--line);
+      border-radius: 20px;
+      background: linear-gradient(180deg, #ffffff, #fbfefb);
+      padding: 12px;
+      overflow: hidden;
+    }
+    svg { width: 100%; height: 380px; display: block; }
+    .axis { stroke: #cbd5c8; stroke-width: 1; }
+    .gridline { stroke: #e7efe4; stroke-width: 1; }
+    .line { fill: none; stroke-width: 3; stroke-linejoin: round; stroke-linecap: round; }
+    .dot { stroke: white; stroke-width: 1.8; }
+    .label { fill: #405040; font-size: 12px; font-weight: 800; }
+    .small-label { fill: #677867; font-size: 11px; }
+    .value-label { fill: #132015; font-size: 12px; font-weight: 900; }
+
+    .legend { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 12px; }
+    .legend-item {
+      display: inline-flex;
+      align-items: center;
+      gap: 7px;
+      background: #fff;
+      border: 1px solid var(--line);
+      border-radius: 999px;
+      padding: 6px 9px;
+      color: #344534;
+      font-weight: 850;
+      font-size: 12px;
+    }
+    .legend-color { width: 11px; height: 11px; border-radius: 50%; }
+
+    .insight-list { display: grid; gap: 10px; margin-top: 14px; }
+    .insight {
+      border: 1px solid var(--line);
+      border-radius: 18px;
+      background: #fff;
+      padding: 14px;
+    }
+    .insight strong { display: block; margin-bottom: 4px; }
+    .insight span { color: var(--muted); line-height: 1.5; font-size: 14px; }
+
+    .table-actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      align-items: center;
+      margin: 14px 0;
+    }
+    .table-wrap {
+      max-height: 470px;
+      overflow: auto;
+      border: 1px solid var(--line);
+      border-radius: 18px;
+      background: #fff;
+    }
+    table { width: 100%; border-collapse: collapse; font-size: 13.5px; }
+    th, td { padding: 11px 10px; border-bottom: 1px solid var(--line); text-align: left; vertical-align: top; }
+    th { position: sticky; top: 0; z-index: 2; background: #f7fbf5; color: #405040; font-size: 12px; text-transform: uppercase; letter-spacing: .035em; }
+    tbody tr:hover { background: #fbfefb; }
+
+    .manual-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-top: 14px; }
+    textarea { min-height: 170px; font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace; font-size: 13px; resize: vertical; }
+
+    .badge {
+      display: inline-flex;
+      border-radius: 999px;
+      padding: 5px 8px;
+      font-size: 12px;
+      font-weight: 900;
+      background: #ecfdf5;
+      color: #166534;
+    }
+    .badge.warn { background: #fff7ed; color: #9a3412; }
+    .badge.info { background: #eff6ff; color: #1d4ed8; }
+
+    .tutorial {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 12px;
+      margin-top: 14px;
+    }
+    .step {
+      background: #fff;
+      border: 1px solid var(--line);
+      border-radius: 18px;
+      padding: 15px;
+    }
+    .step b {
+      display: inline-grid;
+      place-items: center;
+      width: 30px;
+      height: 30px;
+      border-radius: 999px;
+      background: #dcfce7;
+      color: #166534;
+      margin-bottom: 10px;
+    }
+    .source-list { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; margin-top: 14px; }
+    .source { background: #fff; border: 1px solid var(--line); border-radius: 18px; padding: 15px; }
+    .source a { color: #166534; font-weight: 900; text-decoration: none; }
+    .source small { color: var(--muted); line-height: 1.45; display: block; margin-top: 6px; }
+
+    @media (max-width: 1060px) {
+      .hero-grid, .grid, .manual-grid, .source-list, .tutorial { grid-template-columns: 1fr; }
+      .toolbar { grid-template-columns: 1fr 1fr; position: static; }
+      .hero-kpis { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+    }
+    @media (max-width: 680px) {
+      header { padding: 14px; }
+      main { padding: 0 14px 36px; }
+      .toolbar { grid-template-columns: 1fr; }
+      .hero { border-radius: 24px; padding: 24px; }
+      .hero-kpis { grid-template-columns: 1fr; }
+      h1 { font-size: 36px; }
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <section class="hero">
+      <div class="hero-grid">
+        <div>
+          <span class="eyebrow">🌱 Proposta 4 • Genética e Biotecnologia Vegetal</span>
+          <h1>Produtos agropecuários: Brasil em comparação com EUA, China, Japão e Índia</h1>
+          <p>Dashboard interativo com séries anuais de produção entre 1995 e 2024, filtros por múltiplos países e tabela de dados brutos. A estrutura permite complementar 2025, valor agregado, exportações, destinos e dependência de mercados por CSV.</p>
+        </div>
+        <aside class="group-card">
+          <label for="groupName">Nome do grupo</label>
+          <input id="groupName" value="Grupo 4 — Proposta 4 | preencher nomes" oninput="saveGroupName()" />
+          <div class="mini">Este campo fica salvo no navegador. Substitua pelo nome oficial do grupo antes de apresentar.</div>
+        </aside>
+      </div>
+      <div class="hero-kpis">
+        <div class="hero-kpi"><strong id="kpiRows">0</strong><span>linhas brutas carregadas</span></div>
+        <div class="hero-kpi"><strong id="kpiCountries">0</strong><span>países selecionados</span></div>
+        <div class="hero-kpi"><strong id="kpiProducts">0</strong><span>produtos/indicadores</span></div>
+        <div class="hero-kpi"><strong id="kpiPeriod">1995–2024</strong><span>período filtrado</span></div>
+      </div>
+    </section>
+  </header>
+
+  <main>
+    <section class="toolbar">
+      <div class="control">
+        <label for="productSelect">Produto ou indicador</label>
+        <select id="productSelect"></select>
+      </div>
+      <div class="control">
+        <label for="categorySelect">Categoria</label>
+        <select id="categorySelect">
+          <option value="Todos">Todos</option>
+          <option value="Vegetal">Produção vegetal</option>
+          <option value="Animal">Produção animal</option>
+          <option value="Comércio">Comércio/dependência</option>
+        </select>
+      </div>
+      <div class="control">
+        <label for="yearStart">Ano inicial</label>
+        <input type="number" id="yearStart" min="1961" max="2025" value="1995" />
+      </div>
+      <div class="control">
+        <label for="yearEnd">Ano final</label>
+        <input type="number" id="yearEnd" min="1961" max="2025" value="2024" />
+      </div>
+
+      <div class="country-panel" id="countryPanel"></div>
+      <div class="country-panel">
+        <button onclick="renderAll()">Atualizar painel</button>
+        <button class="secondary" onclick="selectAllCountries(true)">Selecionar todos</button>
+        <button class="secondary" onclick="selectAllCountries(false)">Limpar países</button>
+        <button class="blue" onclick="downloadFilteredCSV()">Baixar dados brutos filtrados</button>
+      </div>
+    </section>
+
+    <section class="grid">
+      <article class="card">
+        <h2>Série histórica por país</h2>
+        <p id="chartSubtitle">Selecione produto, países e período para comparar as curvas.</p>
+        <div id="loadStatus" class="status loading">Carregando dados das APIs públicas...</div>
+        <div class="chart-wrap"><svg id="lineChart" role="img" aria-label="Gráfico de linhas"></svg></div>
+        <div class="legend" id="legend"></div>
+      </article>
+
+      <aside class="card">
+        <h2>Leitura rápida</h2>
+        <p>Use esta área para transformar o gráfico em argumento para o infográfico ou apresentação.</p>
+        <div class="insight-list" id="insights"></div>
+      </aside>
+
+      <article class="card full">
+        <h2>Ranking no ano final selecionado</h2>
+        <p>Compara os países selecionados no último ano do filtro. Para 2025, o painel só exibirá dados se você importar uma base manual com esse ano.</p>
+        <div class="chart-wrap"><svg id="barChart" role="img" aria-label="Ranking por país"></svg></div>
+      </article>
+
+      <article class="card full">
+        <h2>Dados brutos filtrados</h2>
+        <p>Esta tabela mostra as linhas realmente usadas nos gráficos. Você pode baixar o CSV e abrir em Excel/Google Sheets.</p>
+        <div class="table-actions">
+          <button class="blue" onclick="downloadFilteredCSV()">Exportar esta tabela</button>
+          <button class="secondary" onclick="copyFilteredCSV()">Copiar CSV</button>
+          <span class="badge info" id="rawCount">0 linhas</span>
+        </div>
+        <div class="table-wrap"><table id="rawTable"></table></div>
+      </article>
+
+      <article class="card full">
+        <h2>Complementar valor agregado, exportações e destinos</h2>
+        <p>A série internacional de produção vem pronta da FAOSTAT via Our World in Data. Para a parte do enunciado sobre valor agregado, mercado interno/exportação, destino das exportações e dependência de mercados específicos, use esta área para importar sua planilha complementar de AgroStat/Comex Stat/UN Comtrade. Isso preserva o dashboard e evita misturar bases incompatíveis.</p>
+        <div class="manual-grid">
+          <div>
+            <h3>CSV complementar</h3>
+            <textarea id="manualCSV" placeholder="ano,pais,produto,categoria,producao_t,valor_usd,exportacao_t,exportacao_pct,principal_destino,destino_pct,risco,fonte"></textarea>
+            <div class="table-actions">
+              <button class="orange" onclick="loadExampleManualCSV()">Inserir exemplo</button>
+              <button onclick="importManualCSV()">Importar complementar</button>
+              <button class="blue" onclick="downloadManualCSV()">Baixar complementar</button>
+            </div>
+          </div>
+          <div>
+            <h3>Dados complementares importados</h3>
+            <div class="table-wrap"><table id="manualTable"></table></div>
+          </div>
+        </div>
+      </article>
+
+      <article class="card full">
+        <h2>Tutorial para alterar e completar</h2>
+        <div class="tutorial">
+          <div class="step"><b>1</b><h3>Trocar o nome do grupo</h3><p>Edite o campo no cabeçalho. O texto fica salvo no navegador por localStorage.</p></div>
+          <div class="step"><b>2</b><h3>Selecionar vários países</h3><p>Marque Brasil, Estados Unidos, China, Japão e/ou Índia ao mesmo tempo nos chips de países.</p></div>
+          <div class="step"><b>3</b><h3>Exportar dados brutos</h3><p>Clique em “Baixar dados brutos filtrados” para salvar exatamente as linhas usadas no gráfico.</p></div>
+          <div class="step"><b>4</b><h3>Adicionar 2025 e exportações</h3><p>Cole um CSV complementar com 2025, valor, exportação e destino por país/produto.</p></div>
+        </div>
+      </article>
+
+      <article class="card full">
+        <h2>Fontes dos dados</h2>
+        <div class="source-list">
+          <div class="source"><a href="https://www.fao.org/faostat/" target="_blank">FAOSTAT</a><small>Base internacional padronizada de produção agrícola e pecuária. O painel usa séries de produção derivadas dessa fonte.</small></div>
+          <div class="source"><a href="https://ourworldindata.org/grapher/soybean-production" target="_blank">Our World in Data Grapher</a><small>API CSV usada para baixar séries por produto, país e ano diretamente no navegador.</small></div>
+          <div class="source"><a href="https://www.gov.br/agricultura/pt-br/assuntos/relacoes-internacionais/estatisticas-de-comercio-exterior" target="_blank">AgroStat/MAPA</a><small>Use para completar exportações brasileiras por produto, destino, volume e valor.</small></div>
+        </div>
+      </article>
+    </section>
+  </main>
+
+  <script>
+    const COUNTRIES = [
+      { name: "Brazil", label: "Brasil", color: "#16a34a" },
+      { name: "United States", label: "Estados Unidos", color: "#2563eb" },
+      { name: "China", label: "China", color: "#dc2626" },
+      { name: "Japan", label: "Japão", color: "#7c3aed" },
+      { name: "India", label: "Índia", color: "#f97316" }
+    ];
+
+    const PRODUCTS = [
+      { id: "soja", label: "Soja", category: "Vegetal", slug: "soybean-production", unit: "toneladas", kind: "production" },
+      { id: "milho", label: "Milho", category: "Vegetal", slug: "maize-production", unit: "toneladas", kind: "production" },
+      { id: "cana", label: "Cana-de-açúcar", category: "Vegetal", slug: "sugar-cane-production", unit: "toneladas", kind: "production" },
+      { id: "trigo", label: "Trigo", category: "Vegetal", slug: "wheat-production", unit: "toneladas", kind: "production" },
+      { id: "arroz", label: "Arroz", category: "Vegetal", slug: "rice-production", unit: "toneladas", kind: "production" },
+      { id: "cafe", label: "Café", category: "Vegetal", slug: "coffee-production-by-region", unit: "toneladas", kind: "production" },
+      { id: "laranja", label: "Laranja", category: "Vegetal", slug: "orange-production", unit: "toneladas", kind: "production" },
+      { id: "leite", label: "Leite", category: "Animal", slug: "milk-production-tonnes", unit: "toneladas", kind: "production" },
+      { id: "frango", label: "Carne de frango", category: "Animal", slug: "chicken-meat-production", unit: "toneladas", kind: "production" },
+      { id: "bovina", label: "Carne bovina e bubalina", category: "Animal", slug: "beef-and-buffalo-meat-production-tonnes", unit: "toneladas", kind: "production" },
+      { id: "suina", label: "Carne suína", category: "Animal", slug: "pigmeat-production-tonnes", unit: "toneladas", kind: "production" },
+      { id: "saldo_alimentos", label: "Saldo líquido de alimentos (% da oferta doméstica)", category: "Comércio", slug: "net-food-trade-as-a-share-of-domestic-supply", unit: "%", kind: "trade" }
+    ];
+
+    let rawRows = [];
+    let manualRows = [];
+    const fmt = new Intl.NumberFormat("pt-BR", { maximumFractionDigits: 1 });
+    const compact = new Intl.NumberFormat("pt-BR", { notation: "compact", maximumFractionDigits: 1 });
+
+    function saveGroupName() {
+      localStorage.setItem("dashboardProposta4GroupName", document.getElementById("groupName").value);
+    }
+
+    function restoreGroupName() {
+      const saved = localStorage.getItem("dashboardProposta4GroupName");
+      if (saved) document.getElementById("groupName").value = saved;
+    }
+
+    function initControls() {
+      const productSelect = document.getElementById("productSelect");
+      productSelect.innerHTML = PRODUCTS.map(p => `<option value="${p.id}">${p.label}</option>`).join("");
+      productSelect.value = "soja";
+
+      const panel = document.getElementById("countryPanel");
+      panel.innerHTML = COUNTRIES.map(c => `
+        <label class="country-chip">
+          <input type="checkbox" name="country" value="${c.name}" checked />
+          <span style="display:inline-block;width:11px;height:11px;border-radius:50%;background:${c.color}"></span>
+          ${c.label}
+        </label>`).join("");
+
+      document.getElementById("productSelect").addEventListener("change", renderAll);
+      document.getElementById("categorySelect").addEventListener("change", filterProductsByCategory);
+      document.getElementById("yearStart").addEventListener("change", renderAll);
+      document.getElementById("yearEnd").addEventListener("change", renderAll);
+      document.querySelectorAll("input[name='country']").forEach(ch => ch.addEventListener("change", renderAll));
+    }
+
+    function filterProductsByCategory() {
+      const cat = document.getElementById("categorySelect").value;
+      const productSelect = document.getElementById("productSelect");
+      const current = productSelect.value;
+      const options = PRODUCTS.filter(p => cat === "Todos" || p.category === cat);
+      productSelect.innerHTML = options.map(p => `<option value="${p.id}">${p.label}</option>`).join("");
+      productSelect.value = options.some(p => p.id === current) ? current : options[0]?.id;
+      renderAll();
+    }
+
+    function selectedCountries() {
+      return [...document.querySelectorAll("input[name='country']:checked")].map(x => x.value);
+    }
+
+    function selectAllCountries(flag) {
+      document.querySelectorAll("input[name='country']").forEach(x => x.checked = flag);
+      renderAll();
+    }
+
+    async function loadAllData() {
+      setStatus("Carregando dados das APIs públicas...", "loading");
+      const tasks = PRODUCTS.map(loadProductData);
+      const results = await Promise.allSettled(tasks);
+      rawRows = results.flatMap(r => r.status === "fulfilled" ? r.value : []);
+      const failed = results.filter(r => r.status === "rejected").length;
+      if (rawRows.length) {
+        setStatus(failed ? `Dados carregados com ${failed} fonte(s) indisponível(is).` : "Dados carregados com sucesso.", failed ? "error" : "ok");
+      } else {
+        setStatus("Não foi possível carregar os CSVs online. Use a área de importação complementar ou abra com internet habilitada.", "error");
+      }
+      renderAll();
+    }
+
+    async function loadProductData(product) {
+      const url = `https://ourworldindata.org/grapher/${product.slug}.csv?v=1&csvType=full&useColumnShortNames=false`;
+      const res = await fetch(url, { mode: "cors" });
+      if (!res.ok) throw new Error(`Falha ao carregar ${product.slug}`);
+      const text = await res.text();
+      const parsed = parseCSV(text);
+      if (parsed.length < 2) return [];
+      const header = parsed[0].map(h => h.trim());
+      const entityIdx = header.findIndex(h => h.toLowerCase() === "entity");
+      const codeIdx = header.findIndex(h => h.toLowerCase() === "code");
+      const yearIdx = header.findIndex(h => h.toLowerCase() === "year");
+      let valueIdx = header.findIndex((h, i) => ![entityIdx, codeIdx, yearIdx].includes(i));
+      const rows = [];
+      for (const arr of parsed.slice(1)) {
+        const country = arr[entityIdx];
+        if (!COUNTRIES.some(c => c.name === country)) continue;
+        const year = Number(arr[yearIdx]);
+        if (!Number.isFinite(year) || year < 1995 || year > 2025) continue;
+        const val = Number(String(arr[valueIdx] ?? "").replace(",", "."));
+        if (!Number.isFinite(val)) continue;
+        rows.push({
+          ano: year,
+          pais: country,
+          pais_pt: countryLabel(country),
+          produto: product.label,
+          categoria: product.category,
+          indicador: product.kind === "trade" ? "Saldo comercial de alimentos" : "Produção",
+          valor: val,
+          unidade: product.unit,
+          fonte: "Our World in Data / FAOSTAT",
+          url: url
+        });
+      }
+      return rows;
+    }
+
+    function filteredRows() {
+      const product = PRODUCTS.find(p => p.id === document.getElementById("productSelect").value);
+      const countries = selectedCountries();
+      const start = Number(document.getElementById("yearStart").value || 1995);
+      const end = Number(document.getElementById("yearEnd").value || 2024);
+      return rawRows.filter(r => r.produto === product?.label && countries.includes(r.pais) && r.ano >= start && r.ano <= end)
+        .sort((a,b) => a.ano - b.ano || a.pais_pt.localeCompare(b.pais_pt));
+    }
+
+    function renderAll() {
+      renderKPIs();
+      renderLineChart();
+      renderBarChart();
+      renderRawTable();
+      renderInsights();
+    }
+
+    function renderKPIs() {
+      const rows = filteredRows();
+      const countries = selectedCountries();
+      const start = document.getElementById("yearStart").value;
+      const end = document.getElementById("yearEnd").value;
+      document.getElementById("kpiRows").textContent = compact.format(rows.length);
+      document.getElementById("kpiCountries").textContent = countries.length;
+      document.getElementById("kpiProducts").textContent = PRODUCTS.length;
+      document.getElementById("kpiPeriod").textContent = `${start}–${end}`;
+      document.getElementById("rawCount").textContent = `${rows.length} linhas`;
+    }
+
+    function renderLineChart() {
+      const svg = document.getElementById("lineChart");
+      const rows = filteredRows();
+      const product = PRODUCTS.find(p => p.id === document.getElementById("productSelect").value);
+      document.getElementById("chartSubtitle").textContent = `${product?.label || "Produto"} — ${product?.unit || ""}. Fonte: OWID/FAOSTAT.`;
+      svg.setAttribute("viewBox", "0 0 980 380");
+      svg.innerHTML = "";
+      if (!rows.length) {
+        svg.innerHTML = `<text x="30" y="70" class="label">Sem dados para o filtro atual. Verifique países, produto ou conexão com internet.</text>`;
+        document.getElementById("legend").innerHTML = "";
+        return;
+      }
+
+      const w = 980, h = 380, left = 70, right = 28, top = 28, bottom = 52;
+      const years = [...new Set(rows.map(r => r.ano))].sort((a,b)=>a-b);
+      const minYear = Math.min(...years), maxYear = Math.max(...years);
+      const values = rows.map(r => r.valor);
+      const minVal = Math.min(0, ...values);
+      const maxVal = Math.max(...values);
+      const pad = (maxVal - minVal) * 0.08 || 1;
+      const yMin = minVal < 0 ? minVal - pad : 0;
+      const yMax = maxVal + pad;
+      const x = year => left + ((year - minYear) / Math.max(1, maxYear - minYear)) * (w - left - right);
+      const y = val => h - bottom - ((val - yMin) / Math.max(1, yMax - yMin)) * (h - top - bottom);
+
+      for (let i = 0; i <= 4; i++) {
+        const val = yMin + (i/4)*(yMax-yMin);
+        const yy = y(val);
+        svg.innerHTML += `<line class="gridline" x1="${left}" y1="${yy}" x2="${w-right}" y2="${yy}"></line><text class="small-label" x="8" y="${yy+4}">${compact.format(val)}</text>`;
+      }
+      svg.innerHTML += `<line class="axis" x1="${left}" y1="${h-bottom}" x2="${w-right}" y2="${h-bottom}"></line><line class="axis" x1="${left}" y1="${top}" x2="${left}" y2="${h-bottom}"></line>`;
+
+      const tickYears = [minYear, Math.round((minYear+maxYear)/2), maxYear];
+      tickYears.forEach(yr => svg.innerHTML += `<text class="small-label" x="${x(yr)-14}" y="${h-22}">${yr}</text>`);
+
+      const countries = selectedCountries();
+      countries.forEach(country => {
+        const c = COUNTRIES.find(x => x.name === country);
+        const series = rows.filter(r => r.pais === country).sort((a,b)=>a.ano-b.ano);
+        if (!series.length) return;
+        const path = series.map((r,i) => `${i===0 ? "M" : "L"}${x(r.ano).toFixed(1)},${y(r.valor).toFixed(1)}`).join(" ");
+        svg.innerHTML += `<path class="line" d="${path}" stroke="${c.color}"></path>`;
+        series.filter((_, i) => i === 0 || i === series.length - 1 || i % 5 === 0).forEach(r => {
+          svg.innerHTML += `<circle class="dot" cx="${x(r.ano)}" cy="${y(r.valor)}" r="4" fill="${c.color}"></circle>`;
+        });
+        const last = series[series.length - 1];
+        svg.innerHTML += `<text class="value-label" x="${Math.min(w-160, x(last.ano)+8)}" y="${y(last.valor)-8}" fill="${c.color}">${c.label}: ${compact.format(last.valor)}</text>`;
+      });
+
+      document.getElementById("legend").innerHTML = countries.map(country => {
+        const c = COUNTRIES.find(x => x.name === country);
+        return `<span class="legend-item"><span class="legend-color" style="background:${c.color}"></span>${c.label}</span>`;
+      }).join("");
+    }
+
+    function renderBarChart() {
+      const svg = document.getElementById("barChart");
+      const end = Number(document.getElementById("yearEnd").value || 2024);
+      const rows = filteredRows().filter(r => r.ano === end).sort((a,b)=>b.valor-a.valor);
+      svg.setAttribute("viewBox", "0 0 980 380");
+      svg.innerHTML = "";
+      if (!rows.length) {
+        svg.innerHTML = `<text x="30" y="70" class="label">Sem dados no ano final (${end}). Tente 2024 ou importe 2025 manualmente.</text>`;
+        return;
+      }
+      const w = 980, h = 380, left = 190, right = 60, top = 35, barH = 32, gap = 16;
+      const max = Math.max(...rows.map(r => r.valor), 1);
+      rows.forEach((r, i) => {
+        const c = COUNTRIES.find(x => x.name === r.pais);
+        const y = top + i * (barH + gap);
+        const bw = (w - left - right) * (r.valor / max);
+        svg.innerHTML += `
+          <text class="label" x="20" y="${y + 22}">${r.pais_pt}</text>
+          <rect x="${left}" y="${y}" width="${bw}" height="${barH}" rx="12" fill="${c?.color || '#16a34a'}"></rect>
+          <text class="value-label" x="${Math.min(w-120, left+bw+10)}" y="${y + 22}">${compact.format(r.valor)}</text>`;
+      });
+    }
+
+    function renderRawTable() {
+      const rows = filteredRows();
+      const table = document.getElementById("rawTable");
+      if (!rows.length) {
+        table.innerHTML = `<thead><tr><th>Aviso</th></tr></thead><tbody><tr><td>Nenhum dado bruto para mostrar.</td></tr></tbody>`;
+        return;
+      }
+      table.innerHTML = `
+        <thead><tr><th>Ano</th><th>País</th><th>Produto/indicador</th><th>Categoria</th><th>Indicador</th><th>Valor</th><th>Unidade</th><th>Fonte</th></tr></thead>
+        <tbody>${rows.map(r => `<tr><td>${r.ano}</td><td>${r.pais_pt}</td><td>${r.produto}</td><td>${r.categoria}</td><td>${r.indicador}</td><td>${fmt.format(r.valor)}</td><td>${r.unidade}</td><td>${r.fonte}</td></tr>`).join("")}</tbody>`;
+    }
+
+    function renderInsights() {
+      const rows = filteredRows();
+      const box = document.getElementById("insights");
+      if (!rows.length) {
+        box.innerHTML = `<div class="insight"><strong>Sem leitura possível</strong><span>Não há dados carregados para o filtro atual.</span></div>`;
+        return;
+      }
+      const start = Number(document.getElementById("yearStart").value || 1995);
+      const end = Number(document.getElementById("yearEnd").value || 2024);
+      const product = PRODUCTS.find(p => p.id === document.getElementById("productSelect").value);
+      const byEnd = selectedCountries().map(country => {
+        const series = rows.filter(r => r.pais === country).sort((a,b)=>a.ano-b.ano);
+        return { country, label: countryLabel(country), first: series[0], last: series[series.length-1] };
+      }).filter(x => x.last);
+      const leader = byEnd.slice().sort((a,b)=>b.last.valor-a.last.valor)[0];
+      const growths = byEnd.map(x => ({...x, growth: x.first ? ((x.last.valor - x.first.valor) / Math.abs(x.first.valor || 1)) * 100 : null})).filter(x => Number.isFinite(x.growth));
+      const fastest = growths.slice().sort((a,b)=>b.growth-a.growth)[0];
+      const unit = product?.unit || "";
+      box.innerHTML = `
+        <div class="insight"><strong>Líder no ano final</strong><span>${leader ? `${leader.label} lidera em ${leader.last.ano}, com ${compact.format(leader.last.valor)} ${unit}.` : "Sem liderança calculada."}</span></div>
+        <div class="insight"><strong>Maior crescimento no intervalo</strong><span>${fastest ? `${fastest.label} teve a maior variação aproximada entre ${fastest.first.ano} e ${fastest.last.ano}: ${fmt.format(fastest.growth)}%.` : "Não foi possível calcular crescimento."}</span></div>
+        <div class="insight"><strong>Como usar no texto</strong><span>Compare o padrão brasileiro com os países estratégicos: produção elevada, concentração de mercado externo e diferença entre potência produtora e dependência importadora.</span></div>
+        <div class="insight"><strong>Observação sobre 2025</strong><span>A FAOSTAT/OWID está consolidada até 2024. Para 2025, use projeções oficiais e deixe marcado como estimativa.</span></div>`;
+    }
+
+    function setStatus(msg, type) {
+      const el = document.getElementById("loadStatus");
+      el.textContent = msg;
+      el.className = `status ${type === "loading" ? "loading" : type === "error" ? "error" : ""}`;
+    }
+
+    function getFilteredCSV() {
+      const cols = ["ano","pais","pais_pt","produto","categoria","indicador","valor","unidade","fonte","url"];
+      return [cols.join(",")].concat(filteredRows().map(r => cols.map(c => csvEscape(r[c] ?? "")).join(","))).join("\n");
+    }
+
+    function downloadFilteredCSV() {
+      downloadText(getFilteredCSV(), "dados_brutos_filtrados_proposta4.csv", "text/csv;charset=utf-8");
+    }
+
+    async function copyFilteredCSV() {
+      try {
+        await navigator.clipboard.writeText(getFilteredCSV());
+        alert("CSV copiado para a área de transferência.");
+      } catch (e) {
+        alert("Não foi possível copiar automaticamente. Use o botão de baixar CSV.");
+      }
+    }
+
+    function loadExampleManualCSV() {
+      document.getElementById("manualCSV").value = `ano,pais,produto,categoria,producao_t,valor_usd,exportacao_t,exportacao_pct,principal_destino,destino_pct,risco,fonte\n2024,Brasil,Soja,Vegetal,144500000,,98800000,68.4,China,73,Alto,AgroStat/Comex Stat\n2024,Estados Unidos,Soja,Vegetal,,,,,China,,Médio,UN Comtrade\n2025,Brasil,Soja,Vegetal,,,,,China,,Alto,CONAB/AgroStat - estimativa`;
+    }
+
+    function importManualCSV() {
+      const text = document.getElementById("manualCSV").value.trim();
+      if (!text) return alert("Cole um CSV primeiro.");
+      const rows = parseCSV(text);
+      const header = rows.shift().map(h => h.trim());
+      manualRows = rows.filter(r => r.length > 1).map(arr => {
+        const obj = {};
+        header.forEach((h,i) => obj[h] = arr[i] ?? "");
+        return obj;
+      });
+      renderManualTable();
+    }
+
+    function renderManualTable() {
+      const table = document.getElementById("manualTable");
+      if (!manualRows.length) {
+        table.innerHTML = `<thead><tr><th>Aviso</th></tr></thead><tbody><tr><td>Nenhum dado complementar importado.</td></tr></tbody>`;
+        return;
+      }
+      const cols = Object.keys(manualRows[0]);
+      table.innerHTML = `<thead><tr>${cols.map(c => `<th>${escapeHTML(c)}</th>`).join("")}</tr></thead><tbody>` +
+        manualRows.map(r => `<tr>${cols.map(c => `<td>${escapeHTML(r[c] ?? "")}</td>`).join("")}</tr>`).join("") + `</tbody>`;
+    }
+
+    function downloadManualCSV() {
+      if (!manualRows.length) return alert("Importe dados complementares antes de baixar.");
+      const cols = Object.keys(manualRows[0]);
+      const csv = [cols.join(",")].concat(manualRows.map(r => cols.map(c => csvEscape(r[c] ?? "")).join(","))).join("\n");
+      downloadText(csv, "dados_complementares_exportacao_valor_destinos.csv", "text/csv;charset=utf-8");
+    }
+
+    function parseCSV(text) {
+      const rows = [];
+      let row = [], cur = "", inQuotes = false;
+      for (let i = 0; i < text.length; i++) {
+        const ch = text[i], next = text[i+1];
+        if (ch === '"' && inQuotes && next === '"') { cur += '"'; i++; }
+        else if (ch === '"') inQuotes = !inQuotes;
+        else if (ch === ',' && !inQuotes) { row.push(cur); cur = ""; }
+        else if ((ch === '\n' || ch === '\r') && !inQuotes) {
+          if (cur || row.length) { row.push(cur); rows.push(row); row = []; cur = ""; }
+          if (ch === '\r' && next === '\n') i++;
+        } else cur += ch;
+      }
+      if (cur || row.length) { row.push(cur); rows.push(row); }
+      return rows;
+    }
+
+    function csvEscape(v) {
+      const s = String(v);
+      return /[",\n]/.test(s) ? `"${s.replace(/"/g, '""')}"` : s;
+    }
+
+    function escapeHTML(s) {
+      return String(s).replace(/[&<>'"]/g, t => ({'&':'&amp;','<':'&lt;','>':'&gt;',"'":'&#039;','"':'&quot;'}[t]));
+    }
+
+    function countryLabel(name) {
+      return COUNTRIES.find(c => c.name === name)?.label || name;
+    }
+
+    function downloadText(text, filename, type) {
+      const blob = new Blob([text], { type });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement("a");
+      a.href = url;
+      a.download = filename;
+      a.click();
+      URL.revokeObjectURL(url);
+    }
+
+    restoreGroupName();
+    initControls();
+    renderManualTable();
+    loadAllData();
+  </script>
+</body>
+</html>

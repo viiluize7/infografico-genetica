@@ -1,0 +1,8 @@
+ano,pais,produto,categoria,valor_bi_usd,exportacao_pct,principal_destino,destino_pct,risco,observacao
+2024,Brasil,Soja,Vegetal,0,68.4,China,73,Alto,Preencher valor agregado com fonte oficial; exportação estimada por volume exportado/producao nacional
+2024,Brasil,Milho,Vegetal,0,34.6,Diversificado,0,Médio,Preencher destinos com AgroStat ou Comex Stat
+2024,Brasil,Carne bovina,Animal,0,24.9,China,50,Alto,Preencher com AgroStat/Comex Stat para ano e produto selecionados
+2024,Estados Unidos,Milho,Vegetal,0,0,Diversificado,0,Médio,Preencher exportacao e destino com FAOSTAT Trade ou UN Comtrade
+2024,China,Soja,Vegetal,0,0,Importador líquido,0,Alto,Usar como comparação de dependência importadora
+2024,Japão,Soja,Vegetal,0,0,Importador líquido,0,Alto,Usar como comparação de dependência importadora
+2024,Índia,Arroz,Vegetal,0,0,Diversificado,0,Médio,Preencher produção/exportação com FAOSTAT e comércio com UN Comtrade
