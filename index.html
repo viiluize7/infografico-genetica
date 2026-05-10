@@ -36,7 +36,7 @@
     .dest-grid{display:grid;gap:10px;margin-top:16px}.dest-item{display:grid;grid-template-columns:auto 1fr auto;gap:12px;align-items:center;padding:13px 16px;border-radius:14px;background:#fff;border[...]
     .compare-table{width:100%;border-collapse:collapse;font-size:14px;margin-top:16px}.compare-table th{background:var(--dark);color:#fff;padding:10px 14px;text-align:left;font-size:12px;font-weight:8[...]
     .notice{background:#fffbeb;border:1px solid #fde68a;border-radius:14px;padding:14px 16px;font-size:13px;color:#92400e;font-weight:600;display:flex;gap:10px;align-items:flex-start;margin-top:14px}.[...]
-    @media(max-width:980px){.topbar{align-items:flex-start;flex-direction:column}.hero-inner,.two-col,.three-col{grid-template-columns:1fr}.kpis{grid-template-columns:1fr 1fr}.group-box{display:none}}[...]
+    @media(max-width:980px){.topbar{align-items:flex-start;flex-direction:column}.hero-inner,.two-col,.three-col{grid-template-columns:1fr}.kpis{grid-template-columns:1fr 1fr}.group-box{display:no[...]
   </style>
 </head>
 <body>
@@ -52,14 +52,14 @@
   </nav>
 
   <header>
-    <div class="hero"><div class="hero-inner"><div><div class="eyebrow">🇧🇷 Questão 4 — Agropecuária Brasileira</div><h1>Os 10 principais <span>produtos</span> do agronegócio brasileiro</h1>[...]
+    <div class="hero"><div class="hero-inner"><div><div class="eyebrow">🇧🇷 Questão 4 — Agropecuária Brasileira</div><h1>Os 10 principais <span>produtos</span> do agronegócio brasileiro<[...]
   </header>
 
   <main class="shell">
     <section class="section active" id="sec-overview">
-      <div class="section-header"><div class="section-num">Q4</div><div><h2>Visão geral do Brasil + Top 10 produtos</h2><p>Esta página reúne o panorama geral do agronegócio brasileiro e a justific[...]
-      <div class="kpis"><div class="kpi"><div class="kpi-val">US$ 164,4 bi</div><div class="kpi-label">Exportações agro 2024</div><div class="kpi-sub">Recorde histórico — MAPA/Gov.br</div></div><[...]
-      <div class="two-col"><div class="card"><div class="card-title">📈 Evolução do agronegócio brasileiro</div><div class="card-sub">Participação no PIB e valor exportado — dados CEPEA/USP e[...]
+      <div class="section-header"><div class="section-num">Q4</div><div><h2>Visão geral do Brasil + Top 10 produtos</h2><p>Esta página reúne o panorama geral do agronegócio brasileiro e a just[...]
+      <div class="kpis"><div class="kpi"><div class="kpi-val">US$ 164,4 bi</div><div class="kpi-label">Exportações agro 2024</div><div class="kpi-sub">Recorde histórico — MAPA/Gov.br</div></d[...]
+      <div class="two-col"><div class="card"><div class="card-title">📈 Evolução do agronegócio brasileiro</div><div class="card-sub">Participação no PIB e valor exportado — dados CEPEA/U[...]
       <div class="filter-bar"><div class="filter-group"><label>Ranking</label><select id="rankMetric" onchange="renderRanking()"><option value="volume">Volume de produção</option><option value="valo[...]
       <div class="two-col"><div class="card"><div class="card-title" id="rankTitle">🏆 Top 10 por volume de produção</div><div class="card-sub">Os produtos abaixo foram escolhidos para compor os f[...]
     </section>
